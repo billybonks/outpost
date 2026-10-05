@@ -10,6 +10,13 @@ remote_home=$work/remote-home
 mkdir -p "$release" "$bin" "$home" "$remote_home"
 cat > "$release/outpost" <<'EOF'
 #!/bin/sh
+if [ -n "${OUTPOST_TEST_STARTUP_COUNTER:-}" ]; then
+ count=$(cat "$OUTPOST_TEST_STARTUP_COUNTER")
+ if [ "$count" -gt 0 ]; then
+  printf '%s\n' "$((count - 1))" > "$OUTPOST_TEST_STARTUP_COUNTER"
+  exit 1
+ fi
+fi
 printf '%s|%s|%s\n' "${OUTPOST_SERVER:-}" "${OUTPOST_TOKEN:-}" "${OUTPOST_SSH_PROXY_JUMP:-}" >> "$OUTPOST_CLIENT_LOG"
 EOF
 chmod 755 "$release/outpost"
@@ -48,7 +55,18 @@ esac
 EOF
 cat > "$bin/sudo" <<'EOF'
 #!/bin/sh
-if [ "$1" = install ]; then cat >/dev/null; printf '%s\n' "$*" >> "$OUTPOST_TEST_LOG"; exit 0; fi
+if [ "$1" = test ]; then
+ case "$3" in /etc/outpostd/uninstall.env|/etc/systemd/system/outpost-cloudflared.service) exit 1;; esac
+fi
+if [ "$1" = systemctl ]; then printf '%s\n' "$*" >> "$OUTPOST_TEST_LOG"; exit 0; fi
+if [ "$1" = install ]; then
+ case "$*" in
+  *cloudflared.env*) cp "$8" "$OUTPOST_TEST_TUNNEL_ENV" ;;
+  *outpost-cloudflared.service*) cp "$8" "$OUTPOST_TEST_TUNNEL_UNIT" ;;
+  *) cat >/dev/null ;;
+ esac
+ printf '%s\n' "$*" >> "$OUTPOST_TEST_LOG"; exit 0
+fi
 if [ "$1" = chown ] || [ "$1" = chmod ]; then exit 0; fi
 exec "$@"
 EOF
@@ -62,7 +80,12 @@ printf 'pacman %s\n' "$*" >> "$OUTPOST_TEST_LOG"
 EOF
 cat > "$bin/tailscale" <<'EOF'
 #!/bin/sh
+printf 'tailscale %s\n' "$*" >> "$OUTPOST_TEST_LOG"
 printf '%s\n' 100.64.0.2
+EOF
+cat > "$bin/cloudflared" <<'EOF'
+#!/bin/sh
+exit 0
 EOF
 cat > "$bin/ip" <<'EOF'
 #!/bin/sh
@@ -110,7 +133,7 @@ import base64,re,sys
 value=re.search(r"server_uninstaller_b64='([^']+)'",open(sys.argv[1]).read()).group(1)
 if base64.b64decode(value)!=open(sys.argv[2],'rb').read(): raise SystemExit('embedded uninstaller drift')
 PY
-run() { env HOME="$home" PATH="$bin:$PATH" OUTPOST_INSTALL_TEST=1 OUTPOST_INSTALL_SSH_STDIN="$work/tty" OUTPOST_TEST_RELEASE="$release" OUTPOST_TEST_INSTALLER="$repo/install.sh" OUTPOST_TEST_REMOTE_HOME="$remote_home" OUTPOST_TEST_LOG="$work/log" OUTPOST_TEST_CURL_LOG="$work/curl.log" OUTPOST_TEST_SSH_STDIN_LOG="$work/ssh-stdin.log" OUTPOST_TEST_SSH_COMMAND_LOG="$work/ssh-command.log" OUTPOST_TEST_UNINSTALL_COMMAND_LOG="$work/uninstall-command.log" OUTPOST_CLIENT_LOG="$work/client.log" "$@" bash "$repo/install.sh"; }
+run() { env HOME="$home" PATH="$bin:$PATH" OUTPOST_INSTALL_TEST=1 OUTPOST_INSTALL_SSH_STDIN="$work/tty" OUTPOST_TEST_RELEASE="$release" OUTPOST_TEST_INSTALLER="$repo/install.sh" OUTPOST_TEST_REMOTE_HOME="$remote_home" OUTPOST_TEST_LOG="$work/log" OUTPOST_TEST_CURL_LOG="$work/curl.log" OUTPOST_TEST_SSH_STDIN_LOG="$work/ssh-stdin.log" OUTPOST_TEST_SSH_COMMAND_LOG="$work/ssh-command.log" OUTPOST_TEST_UNINSTALL_COMMAND_LOG="$work/uninstall-command.log" OUTPOST_CLIENT_LOG="$work/client.log" OUTPOST_TEST_TUNNEL_ENV="$work/tunnel.env" OUTPOST_TEST_TUNNEL_UNIT="$work/tunnel.service" OUTPOST_INSTALL_NETWORK=tailscale "$@" bash "$repo/install.sh"; }
 run OUTPOST_INSTALL_MODE=client
 [ -x "$home/.local/bin/outpost" ]
 [ -x "$home/.local/lib/outpost/outpost-1.2.3" ]
@@ -176,4 +199,43 @@ grep -Fqx 'sudo /usr/local/lib/outpost/outpost-uninstall-server' "$work/uninstal
 [ ! -e "$home/.local/bin/outpost" ]
 [ ! -e "$home/.local/lib/outpost" ]
 [ ! -e "$home/.config/outpost/server.env" ]
+# Local-only and Cloudflare binds must not consult Tailscale.
+rm -rf "$home/.config/outpost"
+before=$(grep -c '^tailscale ' "$work/log")
+printf '2\n' > "$work/startup-counter"
+run OUTPOST_INSTALL_TARGET=local OUTPOST_INSTALL_NETWORK=local OUTPOST_TEST_STARTUP_COUNTER="$work/startup-counter"
+[ "$(cat "$work/startup-counter")" = 0 ]
+grep -qx 'OUTPOST_SERVER=http://127.0.0.1:17890' "$config"
+[ "$before" = "$(grep -c '^tailscale ' "$work/log")" ]
+if run OUTPOST_INSTALL_TARGET=local OUTPOST_INSTALL_NETWORK=invalid >/dev/null 2>&1; then exit 1; fi
+if run OUTPOST_INSTALL_TARGET=user@server OUTPOST_INSTALL_NETWORK=local >/dev/null 2>&1; then exit 1; fi
+for hostname in 'bad;host' '-bad.example.com' 'bad..example.com' 'example.com/' 'example.com.' '127.0.0.1'; do
+ if run OUTPOST_INSTALL_TARGET=local OUTPOST_INSTALL_NETWORK=cloudflare OUTPOST_INSTALL_CLOUDFLARE_HOSTNAME="$hostname" >/dev/null 2>&1; then exit 1; fi
+done
+printf '%s\n' ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi= > "$work/tunnel-token"
+chmod 600 "$work/tunnel-token"
+run OUTPOST_INSTALL_TARGET=local OUTPOST_INSTALL_NETWORK=cloudflare OUTPOST_INSTALL_CLOUDFLARE_HOSTNAME=outpost.example.com OUTPOST_INSTALL_CLOUDFLARE_TOKEN_FILE="$work/tunnel-token"
+grep -qx 'OUTPOST_SERVER=http://127.0.0.1:17890' "$config"
+grep -qx 'TUNNEL_TOKEN=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi=' "$work/tunnel.env"
+grep -q '^EnvironmentFile=/etc/outpost-cloudflared/cloudflared.env$' "$work/tunnel.service"
+grep -q 'systemctl restart outpost-cloudflared.service' "$work/log"
+if grep -q 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi=' "$work/log"; then exit 1; fi
+[ "$before" = "$(grep -c '^tailscale ' "$work/log")" ]
+chmod 644 "$work/tunnel-token"
+if run OUTPOST_INSTALL_TARGET=local OUTPOST_INSTALL_NETWORK=cloudflare OUTPOST_INSTALL_CLOUDFLARE_HOSTNAME=outpost.example.com OUTPOST_INSTALL_CLOUDFLARE_TOKEN_FILE="$work/tunnel-token" >/dev/null 2>&1; then exit 1; fi
+chmod 600 "$work/tunnel-token"
+run OUTPOST_INSTALL_TARGET=user@server OUTPOST_INSTALL_NETWORK=cloudflare OUTPOST_INSTALL_CLOUDFLARE_HOSTNAME=outpost.example.com OUTPOST_INSTALL_CLOUDFLARE_TOKEN_FILE="$work/tunnel-token"
+grep -qx 'OUTPOST_SERVER=https://outpost.example.com' "$config"
+HOME="$home" OUTPOST_CLIENT_LOG="$work/client.log" "$home/.local/bin/outpost" list
+grep -qx 'https://outpost.example.com|ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi=|user@server' "$work/client.log"
+# Exercise the interactive yes/no branches without requiring an actual terminal.
+printf 'y\n' | run OUTPOST_INSTALL_TARGET=local OUTPOST_INSTALL_NETWORK= OUTPOST_INSTALL_INPUT=/dev/stdin
+printf 'n\nn\n' | run OUTPOST_INSTALL_TARGET=local OUTPOST_INSTALL_NETWORK= OUTPOST_INSTALL_INPUT=/dev/stdin
+printf 'n\ny\n' | run OUTPOST_INSTALL_TARGET=local OUTPOST_INSTALL_NETWORK= OUTPOST_INSTALL_INPUT=/dev/stdin OUTPOST_INSTALL_CLOUDFLARE_HOSTNAME=outpost.example.com OUTPOST_INSTALL_CLOUDFLARE_TOKEN_FILE="$work/tunnel-token"
+# Domain support must not relax URL validation to accept credentials or paths.
+for url in 'http://outpost.example.com' 'https://user@outpost.example.com' 'https://outpost.example.com/path' 'https://outpost.example.com:99999' 'https://outpost..example.com' 'https://outpost.example.com?x=1'; do
+ printf 'OUTPOST_SERVER=%s\nOUTPOST_TOKEN=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi=\n' "$url" > "$config"
+ chmod 600 "$config"
+ if HOME="$home" OUTPOST_CLIENT_LOG="$work/client.log" "$home/.local/bin/outpost" list >/dev/null 2>&1; then exit 1; fi
+done
 printf '%s\n' TestInstallIntegration

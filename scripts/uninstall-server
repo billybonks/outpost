@@ -48,6 +48,13 @@ if [ -f "$file" ] && [ ! -L "$file" ]; then
  fi
  created_outpostd_user=${2#*=}; created_outpostvm_user=${3#*=}; created_outpostd_group=${4#*=}; created_outpostvm_group=${5#*=}; created_subuid=${6#*=}; created_subgid=${7#*=}; ip_previous=${8#*=}; changed_ip=${9#*=}; created_sysctl=${10#*=}
 fi
+# Only touch the dedicated Outpost tunnel; leave unrelated cloudflared services alone.
+if [ -f "$root/etc/systemd/system/outpost-cloudflared.service" ]; then
+ log stop-cloudflare; stop outpost-cloudflared || exit 1
+ systemctl disable outpost-cloudflared.service || exit 1
+ remove /etc/systemd/system/outpost-cloudflared.service
+ remove /etc/outpost-cloudflared
+fi
 launcher_load=$(systemctl show -p LoadState --value outpost-vm-launcher.service)
 log stop-outpostd; stop outpostd || exit 1
 log stop-launcher; stop outpost-vm-launcher || exit 1

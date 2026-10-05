@@ -292,8 +292,18 @@ chmod 755 "$work/bin/systemctl"
 mkdir -p "$root/unrelated"; printf keep > "$root/unrelated/file"
 if PATH="$work/bin:$PATH" OUTPOST_UNINSTALL_ROOT="$root" OUTPOST_UNINSTALL_TEST=1 OUTPOST_UNINSTALL_TEST_READY=1 OUTPOST_UNINSTALL_FAIL=start OUTPOST_UNINSTALL_SYSTEMCTL_LOG="$work/uninstall-systemctl" "$repo/scripts/uninstall-server" >/dev/null 2>&1; then exit 1; fi
 [ -e "$root/usr/local/lib/outpost" ]
+printf 'Outpost tunnel\n' > "$root/etc/systemd/system/outpost-cloudflared.service"
+printf 'Unrelated tunnel\n' > "$root/etc/systemd/system/cloudflared.service"
+mkdir -p "$root/etc/outpost-cloudflared"
+printf 'TUNNEL_TOKEN=secret\n' > "$root/etc/outpost-cloudflared/cloudflared.env"
 PATH="$work/bin:$PATH" OUTPOST_UNINSTALL_ROOT="$root" OUTPOST_UNINSTALL_TEST=1 OUTPOST_UNINSTALL_TEST_READY=1 OUTPOST_UNINSTALL_TEST_LOG="$work/uninstall-order" OUTPOST_UNINSTALL_SYSTEMCTL_LOG="$work/uninstall-systemctl" "$repo/scripts/uninstall-server"
-[ "$(head -n 4 "$work/uninstall-order" | tr '\n' ' ')" = 'stop-outpostd stop-launcher reconcile-launcher stop-reconciled-launcher ' ]
+[ "$(head -n 5 "$work/uninstall-order" | tr '\n' ' ')" = 'stop-cloudflare stop-outpostd stop-launcher reconcile-launcher stop-reconciled-launcher ' ]
+grep -Fqx 'stop outpost-cloudflared.service' "$work/uninstall-systemctl"
+grep -Fqx 'disable outpost-cloudflared.service' "$work/uninstall-systemctl"
+[ ! -e "$root/etc/systemd/system/outpost-cloudflared.service" ]
+[ ! -e "$root/etc/outpost-cloudflared" ]
+[ -e "$root/etc/systemd/system/cloudflared.service" ]
+if grep -Fq 'stop cloudflared.service' "$work/uninstall-systemctl"; then exit 1; fi
 grep -Fqx 'stop outpostd.service' "$work/uninstall-systemctl"
 grep -Fqx 'start outpost-vm-launcher.service' "$work/uninstall-systemctl"
 [ ! -e "$root/usr/local/lib/outpost" ]

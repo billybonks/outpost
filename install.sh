@@ -2,7 +2,7 @@
 set -euo pipefail
 
 handoff_work=
-server_uninstaller_b64='IyEvYmluL3NoCnNldCAtZXUKWyAiJCMiIC1lcSAwIF0gfHwgZXhpdCAxCnJvb3Q9JHtPVVRQT1NUX1VOSU5TVEFMTF9ST09UOi19CnRlc3RfbW9kZT0ke09VVFBPU1RfVU5JTlNUQUxMX1RFU1Q6LTB9ClsgLXogIiRyb290IiBdIHx8IFsgIiR0ZXN0X21vZGUiID0gMSBdIHx8IGV4aXQgMQpjYXNlICIkcm9vdCIgaW4gJyd8LyopIDo7OyAqKSBleGl0IDE7OyBlc2FjClsgIiR0ZXN0X21vZGUiID0gMSBdIHx8IFsgIiQoaWQgLXUpIiA9IDAgXSB8fCBleGl0IDEKbG9nKCkgeyBbIC16ICIke09VVFBPU1RfVU5JTlNUQUxMX1RFU1RfTE9HOi19IiBdIHx8IHByaW50ZiAnJXNcbicgIiQxIiA+PiAiJE9VVFBPU1RfVU5JTlNUQUxMX1RFU1RfTE9HIjsgfQpyZW1vdmUoKSB7IGlmIFsgLWUgIiRyb290JDEiIF0gfHwgWyAtTCAiJHJvb3QkMSIgXTsgdGhlbiBybSAtcmYgLS0gIiRyb290JDEiOyBmaTsgfQppbmFjdGl2ZSgpIHsgWyAiJChzeXN0ZW1jdGwgc2hvdyAtcCBBY3RpdmVTdGF0ZSAtLXZhbHVlICIkMS5zZXJ2aWNlIikiID0gaW5hY3RpdmUgXTsgfQpzdG9wKCkgeyBzeXN0ZW1jdGwgc3RvcCAiJDEuc2VydmljZSIgfHwgWyAiJChzeXN0ZW1jdGwgc2hvdyAtcCBMb2FkU3RhdGUgLS12YWx1ZSAiJDEuc2VydmljZSIpIiA9IG5vdC1mb3VuZCBdOyBpbmFjdGl2ZSAiJDEiOyB9CnJlYWR5KCkgewogWyAiJHRlc3RfbW9kZSIgPSAxIF0gJiYgWyAiJHtPVVRQT1NUX1VOSU5TVEFMTF9URVNUX1JFQURZOi19IiA9IDEgXSAmJiByZXR1cm4KIHB5dGhvbjMgLSAiJHJvb3QvcnVuL291dHBvc3Qvdm0tbGF1bmNoZXIuc29jayIgIiR7T1VUUE9TVF9VTklOU1RBTExfUkVBRFlfVElNRU9VVDotMzB9IiA8PCdQWScKaW1wb3J0IHNvY2tldCxzeXMsdGltZQpwYXRoLHRpbWVvdXQ9c3lzLmFyZ3ZbMV0saW50KHN5cy5hcmd2WzJdKTsgZW5kPXRpbWUubW9ub3RvbmljKCkrdGltZW91dAp3aGlsZSB0aW1lLm1vbm90b25pYygpPGVuZDoKIHRyeToKICBzPXNvY2tldC5zb2NrZXQoc29ja2V0LkFGX1VOSVgpOyBzLnNldHRpbWVvdXQoLjIpOyBzLmNvbm5lY3QocGF0aCk7IHMuY2xvc2UoKTsgcmFpc2UgU3lzdGVtRXhpdCgwKQogZXhjZXB0IE9TRXJyb3I6IHRpbWUuc2xlZXAoLjEpCnJhaXNlIFN5c3RlbUV4aXQoMSkKUFkKfQpoYW5kb2ZmPScnOyBjcmVhdGVkX291dHBvc3RkX3VzZXI9Jyc7IGNyZWF0ZWRfb3V0cG9zdHZtX3VzZXI9Jyc7IGNyZWF0ZWRfb3V0cG9zdGRfZ3JvdXA9Jyc7IGNyZWF0ZWRfb3V0cG9zdHZtX2dyb3VwPScnOyBjcmVhdGVkX3N1YnVpZD0nJzsgY3JlYXRlZF9zdWJnaWQ9Jyc7IGlwX3ByZXZpb3VzPScnOyBjaGFuZ2VkX2lwPScnOyBjcmVhdGVkX3N5c2N0bD0nJwpmaWxlPSRyb290L2V0Yy9vdXRwb3N0ZC91bmluc3RhbGwuZW52CmlmIFsgLWYgIiRmaWxlIiBdICYmIFsgISAtTCAiJGZpbGUiIF07IHRoZW4KIFsgIiR0ZXN0X21vZGUiID0gMSBdIHx8IFsgIiQoc3RhdCAtYyAldTolYSAiJGZpbGUiKSIgPSAwOjYwMCBdIHx8IGV4aXQgMQogeyBJRlM9IHJlYWQgLXIgb25lOyBJRlM9IHJlYWQgLXIgdHdvOyBJRlM9IHJlYWQgLXIgdGhyZWU7IElGUz0gcmVhZCAtciBmb3VyOyBJRlM9IHJlYWQgLXIgZml2ZTsgSUZTPSByZWFkIC1yIHNpeDsgSUZTPSByZWFkIC1yIHNldmVuOyBJRlM9IHJlYWQgLXIgZWlnaHQ7IElGUz0gcmVhZCAtciBuaW5lOyBJRlM9IHJlYWQgLXIgdGVuOyBJRlM9IHJlYWQgLXIgZXh0cmEgfHwgOjsgfSA8ICIkZmlsZSIKIFsgLXogIiRleHRyYSIgXSB8fCBleGl0IDEKIHNldCAtLSAiJG9uZSIgIiR0d28iICIkdGhyZWUiICIkZm91ciIgIiRmaXZlIiAiJHNpeCIgIiRzZXZlbiIgIiRlaWdodCIgIiRuaW5lIiAiJHRlbiIKIGNhc2UgIiQxOiQyOiQzOiQ0OiQ1OiQ2OiQ3OiQ4OiQ5OiR7MTB9IiBpbgogIE9VVFBPU1RfSEFORE9GRj0qOk9VVFBPU1RfQ1JFQVRFRF9PVVRQT1NURF9VU0VSPVswMV06T1VUUE9TVF9DUkVBVEVEX09VVFBPU1RWTV9VU0VSPVswMV06T1VUUE9TVF9DUkVBVEVEX09VVFBPU1REX0dST1VQPVswMV06T1VUUE9TVF9DUkVBVEVEX09VVFBPU1RWTV9HUk9VUD1bMDFdOk9VVFBPU1RfQ1JFQVRFRF9PVVRQT1NURF9TVUJVSUQ9WzAxXTpPVVRQT1NUX0NSRUFURURfT1VUUE9TVERfU1VCR0lEPVswMV06T1VUUE9TVF9JUF9GT1JXQVJEX1BSRVZJT1VTPVswMV06T1VUUE9TVF9DSEFOR0VEX0lQX0ZPUldBUkQ9WzAxXTpPVVRQT1NUX0NSRUFURURfU1lTQ1RMPVswMV0pIDo7OyAqKSBleGl0IDE7OwogZXNhYwogaGFuZG9mZj0kezEjT1VUUE9TVF9IQU5ET0ZGPX0KIGlmIFsgIiR0ZXN0X21vZGUiID0gMSBdOyB0aGVuCiAgY2FzZSAiJGhhbmRvZmYiIGluIC8qLy5jb25maWcvb3V0cG9zdC9zZXJ2ZXIuZW52KSA6OzsgKikgZXhpdCAxOzsgZXNhYwogZWxzZQogIGNhc2UgIiRoYW5kb2ZmIiBpbgogICAvcm9vdC8uY29uZmlnL291dHBvc3Qvc2VydmVyLmVudikgOiA7OwogICAvaG9tZS8qLy5jb25maWcvb3V0cG9zdC9zZXJ2ZXIuZW52KQogICAgdXNlcj0ke2hhbmRvZmYjL2hvbWUvfTsgdXNlcj0ke3VzZXIlJS8qfQogICAgY2FzZSAiJHVzZXIiIGluICcnfCpbIUEtWmEtejAtOV8uLV0qKSBleGl0IDE7OyBlc2FjCiAgICBbICIkaGFuZG9mZiIgPSAiL2hvbWUvJHVzZXIvLmNvbmZpZy9vdXRwb3N0L3NlcnZlci5lbnYiIF0gfHwgZXhpdCAxCiAgICA7OwogICAqKSBleGl0IDEgOzsKICBlc2FjCiBmaQogY3JlYXRlZF9vdXRwb3N0ZF91c2VyPSR7MiMqPX07IGNyZWF0ZWRfb3V0cG9zdHZtX3VzZXI9JHszIyo9fTsgY3JlYXRlZF9vdXRwb3N0ZF9ncm91cD0kezQjKj19OyBjcmVhdGVkX291dHBvc3R2bV9ncm91cD0kezUjKj19OyBjcmVhdGVkX3N1YnVpZD0kezYjKj19OyBjcmVhdGVkX3N1YmdpZD0kezcjKj19OyBpcF9wcmV2aW91cz0kezgjKj19OyBjaGFuZ2VkX2lwPSR7OSMqPX07IGNyZWF0ZWRfc3lzY3RsPSR7MTAjKj19CmZpCmxhdW5jaGVyX2xvYWQ9JChzeXN0ZW1jdGwgc2hvdyAtcCBMb2FkU3RhdGUgLS12YWx1ZSBvdXRwb3N0LXZtLWxhdW5jaGVyLnNlcnZpY2UpCmxvZyBzdG9wLW91dHBvc3RkOyBzdG9wIG91dHBvc3RkIHx8IGV4aXQgMQpsb2cgc3RvcC1sYXVuY2hlcjsgc3RvcCBvdXRwb3N0LXZtLWxhdW5jaGVyIHx8IGV4aXQgMQppZiBbICIkbGF1bmNoZXJfbG9hZCIgIT0gbm90LWZvdW5kIF07IHRoZW4KIGxvZyByZWNvbmNpbGUtbGF1bmNoZXI7IHN5c3RlbWN0bCBzdGFydCBvdXRwb3N0LXZtLWxhdW5jaGVyLnNlcnZpY2UgJiYgc3lzdGVtY3RsIGlzLWFjdGl2ZSAtLXF1aWV0IG91dHBvc3Qtdm0tbGF1bmNoZXIuc2VydmljZSAmJiByZWFkeSB8fCBleGl0IDEKIGxvZyBzdG9wLXJlY29uY2lsZWQtbGF1bmNoZXI7IHN0b3Agb3V0cG9zdC12bS1sYXVuY2hlciB8fCBleGl0IDEKZmkKc3lzdGVtY3RsIGRpc2FibGUgb3V0cG9zdGQuc2VydmljZSB8fCBbICIkKHN5c3RlbWN0bCBzaG93IC1wIExvYWRTdGF0ZSAtLXZhbHVlIG91dHBvc3RkLnNlcnZpY2UpIiA9IG5vdC1mb3VuZCBdIHx8IGV4aXQgMQpzeXN0ZW1jdGwgZGlzYWJsZSBvdXRwb3N0LXZtLWxhdW5jaGVyLnNlcnZpY2UgfHwgWyAiJGxhdW5jaGVyX2xvYWQiID0gbm90LWZvdW5kIF0gfHwgZXhpdCAxClsgLXogIiRoYW5kb2ZmIiBdIHx8IHJlbW92ZSAiJGhhbmRvZmYiClsgIiRjcmVhdGVkX3N5c2N0bCIgIT0gMSBdIHx8IHJlbW92ZSAvZXRjL3N5c2N0bC5kLzk5LW91dHBvc3QuY29uZgpyZW1vdmUgL2V0Yy9zeXN0ZW1kL3N5c3RlbS9vdXRwb3N0ZC5zZXJ2aWNlCnJlbW92ZSAvZXRjL3N5c3RlbWQvc3lzdGVtL291dHBvc3Qtdm0tbGF1bmNoZXIuc2VydmljZQpyZW1vdmUgL3Vzci9saWIvdG1wZmlsZXMuZC9vdXRwb3N0LmNvbmYKcmVtb3ZlIC91c3IvbG9jYWwvYmluL291dHBvc3QKcmVtb3ZlIC91c3IvbG9jYWwvbGliL291dHBvc3QKcmVtb3ZlIC9ldGMvb3V0cG9zdGQKcmVtb3ZlIC92YXIvbGliL291dHBvc3RkCnJlbW92ZSAvc3J2L291dHBvc3Qvc3RhdGUKcmVtb3ZlIC9zcnYvb3V0cG9zdC9qYWlsZXIKcm1kaXIgLS0gIiRyb290L3Nydi9vdXRwb3N0IiAyPi9kZXYvbnVsbCB8fCA6CnJlbW92ZSAvcnVuL291dHBvc3QKaWYgWyAiJHRlc3RfbW9kZSIgIT0gMSBdOyB0aGVuCiBbICIkY3JlYXRlZF9zdWJ1aWQiICE9IDEgXSB8fCBzZWQgLWkgJy9eb3V0cG9zdGQ6L2QnIC9ldGMvc3VidWlkCiBbICIkY3JlYXRlZF9zdWJnaWQiICE9IDEgXSB8fCBzZWQgLWkgJy9eb3V0cG9zdGQ6L2QnIC9ldGMvc3ViZ2lkCiBbICIkY3JlYXRlZF9vdXRwb3N0ZF91c2VyIiAhPSAxIF0gfHwgdXNlcmRlbCBvdXRwb3N0ZAogWyAiJGNyZWF0ZWRfb3V0cG9zdHZtX3VzZXIiICE9IDEgXSB8fCB1c2VyZGVsIG91dHBvc3R2bQogWyAiJGNyZWF0ZWRfb3V0cG9zdGRfZ3JvdXAiICE9IDEgXSB8fCBncm91cGRlbCBvdXRwb3N0ZAogWyAiJGNyZWF0ZWRfb3V0cG9zdHZtX2dyb3VwIiAhPSAxIF0gfHwgZ3JvdXBkZWwgb3V0cG9zdHZtCiBpZiBbICIkY2hhbmdlZF9pcCIgPSAxIF0gJiYgISBncmVwIC1ScXMgJ15bWzpzcGFjZTpdXSpuZXQuaXB2NC5pcF9mb3J3YXJkW1s6c3BhY2U6XV0qPVtbOnNwYWNlOl1dKjFbWzpzcGFjZTpdXSokJyAvZXRjL3N5c2N0bC5jb25mIC9ldGMvc3lzY3RsLmQgMj4vZGV2L251bGw7IHRoZW4gc3lzY3RsIC13ICJuZXQuaXB2NC5pcF9mb3J3YXJkPSRpcF9wcmV2aW91cyIgPi9kZXYvbnVsbDsgZmkKZmkKc3lzdGVtY3RsIGRhZW1vbi1yZWxvYWQKbG9nIGNvbXBsZXRlCg=='
+server_uninstaller_b64='IyEvYmluL3NoCnNldCAtZXUKWyAiJCMiIC1lcSAwIF0gfHwgZXhpdCAxCnJvb3Q9JHtPVVRQT1NUX1VOSU5TVEFMTF9ST09UOi19CnRlc3RfbW9kZT0ke09VVFBPU1RfVU5JTlNUQUxMX1RFU1Q6LTB9ClsgLXogIiRyb290IiBdIHx8IFsgIiR0ZXN0X21vZGUiID0gMSBdIHx8IGV4aXQgMQpjYXNlICIkcm9vdCIgaW4gJyd8LyopIDo7OyAqKSBleGl0IDE7OyBlc2FjClsgIiR0ZXN0X21vZGUiID0gMSBdIHx8IFsgIiQoaWQgLXUpIiA9IDAgXSB8fCBleGl0IDEKbG9nKCkgeyBbIC16ICIke09VVFBPU1RfVU5JTlNUQUxMX1RFU1RfTE9HOi19IiBdIHx8IHByaW50ZiAnJXNcbicgIiQxIiA+PiAiJE9VVFBPU1RfVU5JTlNUQUxMX1RFU1RfTE9HIjsgfQpyZW1vdmUoKSB7IGlmIFsgLWUgIiRyb290JDEiIF0gfHwgWyAtTCAiJHJvb3QkMSIgXTsgdGhlbiBybSAtcmYgLS0gIiRyb290JDEiOyBmaTsgfQppbmFjdGl2ZSgpIHsgWyAiJChzeXN0ZW1jdGwgc2hvdyAtcCBBY3RpdmVTdGF0ZSAtLXZhbHVlICIkMS5zZXJ2aWNlIikiID0gaW5hY3RpdmUgXTsgfQpzdG9wKCkgeyBzeXN0ZW1jdGwgc3RvcCAiJDEuc2VydmljZSIgfHwgWyAiJChzeXN0ZW1jdGwgc2hvdyAtcCBMb2FkU3RhdGUgLS12YWx1ZSAiJDEuc2VydmljZSIpIiA9IG5vdC1mb3VuZCBdOyBpbmFjdGl2ZSAiJDEiOyB9CnJlYWR5KCkgewogWyAiJHRlc3RfbW9kZSIgPSAxIF0gJiYgWyAiJHtPVVRQT1NUX1VOSU5TVEFMTF9URVNUX1JFQURZOi19IiA9IDEgXSAmJiByZXR1cm4KIHB5dGhvbjMgLSAiJHJvb3QvcnVuL291dHBvc3Qvdm0tbGF1bmNoZXIuc29jayIgIiR7T1VUUE9TVF9VTklOU1RBTExfUkVBRFlfVElNRU9VVDotMzB9IiA8PCdQWScKaW1wb3J0IHNvY2tldCxzeXMsdGltZQpwYXRoLHRpbWVvdXQ9c3lzLmFyZ3ZbMV0saW50KHN5cy5hcmd2WzJdKTsgZW5kPXRpbWUubW9ub3RvbmljKCkrdGltZW91dAp3aGlsZSB0aW1lLm1vbm90b25pYygpPGVuZDoKIHRyeToKICBzPXNvY2tldC5zb2NrZXQoc29ja2V0LkFGX1VOSVgpOyBzLnNldHRpbWVvdXQoLjIpOyBzLmNvbm5lY3QocGF0aCk7IHMuY2xvc2UoKTsgcmFpc2UgU3lzdGVtRXhpdCgwKQogZXhjZXB0IE9TRXJyb3I6IHRpbWUuc2xlZXAoLjEpCnJhaXNlIFN5c3RlbUV4aXQoMSkKUFkKfQpoYW5kb2ZmPScnOyBjcmVhdGVkX291dHBvc3RkX3VzZXI9Jyc7IGNyZWF0ZWRfb3V0cG9zdHZtX3VzZXI9Jyc7IGNyZWF0ZWRfb3V0cG9zdGRfZ3JvdXA9Jyc7IGNyZWF0ZWRfb3V0cG9zdHZtX2dyb3VwPScnOyBjcmVhdGVkX3N1YnVpZD0nJzsgY3JlYXRlZF9zdWJnaWQ9Jyc7IGlwX3ByZXZpb3VzPScnOyBjaGFuZ2VkX2lwPScnOyBjcmVhdGVkX3N5c2N0bD0nJwpmaWxlPSRyb290L2V0Yy9vdXRwb3N0ZC91bmluc3RhbGwuZW52CmlmIFsgLWYgIiRmaWxlIiBdICYmIFsgISAtTCAiJGZpbGUiIF07IHRoZW4KIFsgIiR0ZXN0X21vZGUiID0gMSBdIHx8IFsgIiQoc3RhdCAtYyAldTolYSAiJGZpbGUiKSIgPSAwOjYwMCBdIHx8IGV4aXQgMQogeyBJRlM9IHJlYWQgLXIgb25lOyBJRlM9IHJlYWQgLXIgdHdvOyBJRlM9IHJlYWQgLXIgdGhyZWU7IElGUz0gcmVhZCAtciBmb3VyOyBJRlM9IHJlYWQgLXIgZml2ZTsgSUZTPSByZWFkIC1yIHNpeDsgSUZTPSByZWFkIC1yIHNldmVuOyBJRlM9IHJlYWQgLXIgZWlnaHQ7IElGUz0gcmVhZCAtciBuaW5lOyBJRlM9IHJlYWQgLXIgdGVuOyBJRlM9IHJlYWQgLXIgZXh0cmEgfHwgOjsgfSA8ICIkZmlsZSIKIFsgLXogIiRleHRyYSIgXSB8fCBleGl0IDEKIHNldCAtLSAiJG9uZSIgIiR0d28iICIkdGhyZWUiICIkZm91ciIgIiRmaXZlIiAiJHNpeCIgIiRzZXZlbiIgIiRlaWdodCIgIiRuaW5lIiAiJHRlbiIKIGNhc2UgIiQxOiQyOiQzOiQ0OiQ1OiQ2OiQ3OiQ4OiQ5OiR7MTB9IiBpbgogIE9VVFBPU1RfSEFORE9GRj0qOk9VVFBPU1RfQ1JFQVRFRF9PVVRQT1NURF9VU0VSPVswMV06T1VUUE9TVF9DUkVBVEVEX09VVFBPU1RWTV9VU0VSPVswMV06T1VUUE9TVF9DUkVBVEVEX09VVFBPU1REX0dST1VQPVswMV06T1VUUE9TVF9DUkVBVEVEX09VVFBPU1RWTV9HUk9VUD1bMDFdOk9VVFBPU1RfQ1JFQVRFRF9PVVRQT1NURF9TVUJVSUQ9WzAxXTpPVVRQT1NUX0NSRUFURURfT1VUUE9TVERfU1VCR0lEPVswMV06T1VUUE9TVF9JUF9GT1JXQVJEX1BSRVZJT1VTPVswMV06T1VUUE9TVF9DSEFOR0VEX0lQX0ZPUldBUkQ9WzAxXTpPVVRQT1NUX0NSRUFURURfU1lTQ1RMPVswMV0pIDo7OyAqKSBleGl0IDE7OwogZXNhYwogaGFuZG9mZj0kezEjT1VUUE9TVF9IQU5ET0ZGPX0KIGlmIFsgIiR0ZXN0X21vZGUiID0gMSBdOyB0aGVuCiAgY2FzZSAiJGhhbmRvZmYiIGluIC8qLy5jb25maWcvb3V0cG9zdC9zZXJ2ZXIuZW52KSA6OzsgKikgZXhpdCAxOzsgZXNhYwogZWxzZQogIGNhc2UgIiRoYW5kb2ZmIiBpbgogICAvcm9vdC8uY29uZmlnL291dHBvc3Qvc2VydmVyLmVudikgOiA7OwogICAvaG9tZS8qLy5jb25maWcvb3V0cG9zdC9zZXJ2ZXIuZW52KQogICAgdXNlcj0ke2hhbmRvZmYjL2hvbWUvfTsgdXNlcj0ke3VzZXIlJS8qfQogICAgY2FzZSAiJHVzZXIiIGluICcnfCpbIUEtWmEtejAtOV8uLV0qKSBleGl0IDE7OyBlc2FjCiAgICBbICIkaGFuZG9mZiIgPSAiL2hvbWUvJHVzZXIvLmNvbmZpZy9vdXRwb3N0L3NlcnZlci5lbnYiIF0gfHwgZXhpdCAxCiAgICA7OwogICAqKSBleGl0IDEgOzsKICBlc2FjCiBmaQogY3JlYXRlZF9vdXRwb3N0ZF91c2VyPSR7MiMqPX07IGNyZWF0ZWRfb3V0cG9zdHZtX3VzZXI9JHszIyo9fTsgY3JlYXRlZF9vdXRwb3N0ZF9ncm91cD0kezQjKj19OyBjcmVhdGVkX291dHBvc3R2bV9ncm91cD0kezUjKj19OyBjcmVhdGVkX3N1YnVpZD0kezYjKj19OyBjcmVhdGVkX3N1YmdpZD0kezcjKj19OyBpcF9wcmV2aW91cz0kezgjKj19OyBjaGFuZ2VkX2lwPSR7OSMqPX07IGNyZWF0ZWRfc3lzY3RsPSR7MTAjKj19CmZpCiMgT25seSB0b3VjaCB0aGUgZGVkaWNhdGVkIE91dHBvc3QgdHVubmVsOyBsZWF2ZSB1bnJlbGF0ZWQgY2xvdWRmbGFyZWQgc2VydmljZXMgYWxvbmUuCmlmIFsgLWYgIiRyb290L2V0Yy9zeXN0ZW1kL3N5c3RlbS9vdXRwb3N0LWNsb3VkZmxhcmVkLnNlcnZpY2UiIF07IHRoZW4KIGxvZyBzdG9wLWNsb3VkZmxhcmU7IHN0b3Agb3V0cG9zdC1jbG91ZGZsYXJlZCB8fCBleGl0IDEKIHN5c3RlbWN0bCBkaXNhYmxlIG91dHBvc3QtY2xvdWRmbGFyZWQuc2VydmljZSB8fCBleGl0IDEKIHJlbW92ZSAvZXRjL3N5c3RlbWQvc3lzdGVtL291dHBvc3QtY2xvdWRmbGFyZWQuc2VydmljZQogcmVtb3ZlIC9ldGMvb3V0cG9zdC1jbG91ZGZsYXJlZApmaQpsYXVuY2hlcl9sb2FkPSQoc3lzdGVtY3RsIHNob3cgLXAgTG9hZFN0YXRlIC0tdmFsdWUgb3V0cG9zdC12bS1sYXVuY2hlci5zZXJ2aWNlKQpsb2cgc3RvcC1vdXRwb3N0ZDsgc3RvcCBvdXRwb3N0ZCB8fCBleGl0IDEKbG9nIHN0b3AtbGF1bmNoZXI7IHN0b3Agb3V0cG9zdC12bS1sYXVuY2hlciB8fCBleGl0IDEKaWYgWyAiJGxhdW5jaGVyX2xvYWQiICE9IG5vdC1mb3VuZCBdOyB0aGVuCiBsb2cgcmVjb25jaWxlLWxhdW5jaGVyOyBzeXN0ZW1jdGwgc3RhcnQgb3V0cG9zdC12bS1sYXVuY2hlci5zZXJ2aWNlICYmIHN5c3RlbWN0bCBpcy1hY3RpdmUgLS1xdWlldCBvdXRwb3N0LXZtLWxhdW5jaGVyLnNlcnZpY2UgJiYgcmVhZHkgfHwgZXhpdCAxCiBsb2cgc3RvcC1yZWNvbmNpbGVkLWxhdW5jaGVyOyBzdG9wIG91dHBvc3Qtdm0tbGF1bmNoZXIgfHwgZXhpdCAxCmZpCnN5c3RlbWN0bCBkaXNhYmxlIG91dHBvc3RkLnNlcnZpY2UgfHwgWyAiJChzeXN0ZW1jdGwgc2hvdyAtcCBMb2FkU3RhdGUgLS12YWx1ZSBvdXRwb3N0ZC5zZXJ2aWNlKSIgPSBub3QtZm91bmQgXSB8fCBleGl0IDEKc3lzdGVtY3RsIGRpc2FibGUgb3V0cG9zdC12bS1sYXVuY2hlci5zZXJ2aWNlIHx8IFsgIiRsYXVuY2hlcl9sb2FkIiA9IG5vdC1mb3VuZCBdIHx8IGV4aXQgMQpbIC16ICIkaGFuZG9mZiIgXSB8fCByZW1vdmUgIiRoYW5kb2ZmIgpbICIkY3JlYXRlZF9zeXNjdGwiICE9IDEgXSB8fCByZW1vdmUgL2V0Yy9zeXNjdGwuZC85OS1vdXRwb3N0LmNvbmYKcmVtb3ZlIC9ldGMvc3lzdGVtZC9zeXN0ZW0vb3V0cG9zdGQuc2VydmljZQpyZW1vdmUgL2V0Yy9zeXN0ZW1kL3N5c3RlbS9vdXRwb3N0LXZtLWxhdW5jaGVyLnNlcnZpY2UKcmVtb3ZlIC91c3IvbGliL3RtcGZpbGVzLmQvb3V0cG9zdC5jb25mCnJlbW92ZSAvdXNyL2xvY2FsL2Jpbi9vdXRwb3N0CnJlbW92ZSAvdXNyL2xvY2FsL2xpYi9vdXRwb3N0CnJlbW92ZSAvZXRjL291dHBvc3RkCnJlbW92ZSAvdmFyL2xpYi9vdXRwb3N0ZApyZW1vdmUgL3Nydi9vdXRwb3N0L3N0YXRlCnJlbW92ZSAvc3J2L291dHBvc3QvamFpbGVyCnJtZGlyIC0tICIkcm9vdC9zcnYvb3V0cG9zdCIgMj4vZGV2L251bGwgfHwgOgpyZW1vdmUgL3J1bi9vdXRwb3N0CmlmIFsgIiR0ZXN0X21vZGUiICE9IDEgXTsgdGhlbgogWyAiJGNyZWF0ZWRfc3VidWlkIiAhPSAxIF0gfHwgc2VkIC1pICcvXm91dHBvc3RkOi9kJyAvZXRjL3N1YnVpZAogWyAiJGNyZWF0ZWRfc3ViZ2lkIiAhPSAxIF0gfHwgc2VkIC1pICcvXm91dHBvc3RkOi9kJyAvZXRjL3N1YmdpZAogWyAiJGNyZWF0ZWRfb3V0cG9zdGRfdXNlciIgIT0gMSBdIHx8IHVzZXJkZWwgb3V0cG9zdGQKIFsgIiRjcmVhdGVkX291dHBvc3R2bV91c2VyIiAhPSAxIF0gfHwgdXNlcmRlbCBvdXRwb3N0dm0KIFsgIiRjcmVhdGVkX291dHBvc3RkX2dyb3VwIiAhPSAxIF0gfHwgZ3JvdXBkZWwgb3V0cG9zdGQKIFsgIiRjcmVhdGVkX291dHBvc3R2bV9ncm91cCIgIT0gMSBdIHx8IGdyb3VwZGVsIG91dHBvc3R2bQogaWYgWyAiJGNoYW5nZWRfaXAiID0gMSBdICYmICEgZ3JlcCAtUnFzICdeW1s6c3BhY2U6XV0qbmV0LmlwdjQuaXBfZm9yd2FyZFtbOnNwYWNlOl1dKj1bWzpzcGFjZTpdXSoxW1s6c3BhY2U6XV0qJCcgL2V0Yy9zeXNjdGwuY29uZiAvZXRjL3N5c2N0bC5kIDI+L2Rldi9udWxsOyB0aGVuIHN5c2N0bCAtdyAibmV0LmlwdjQuaXBfZm9yd2FyZD0kaXBfcHJldmlvdXMiID4vZGV2L251bGw7IGZpCmZpCnN5c3RlbWN0bCBkYWVtb24tcmVsb2FkCmxvZyBjb21wbGV0ZQo='
 fail() { printf '%s\n' "$1" >&2; exit 1; }
 usage() { printf '%s\n' 'Enter user@server for a remote server, local for this machine, or leave blank for client only.' >&2; }
 https_url() { [[ $1 =~ ^https://[A-Za-z0-9.-]+(/[A-Za-z0-9._~/%+-]*)?$ ]]; }
@@ -13,11 +13,26 @@ valid_ipv4() {
  [[ -z ${extra:-} && -n ${a:-} && -n ${b:-} && -n ${c:-} && -n ${d:-} ]] || return 1
  for octet in "$a" "$b" "$c" "$d"; do [[ $octet =~ ^[0-9]{1,3}$ ]] && ((10#$octet <= 255)) || return 1; done
 }
+valid_hostname() {
+ local label host=$1
+ local -a labels
+ [[ ${#host} -le 253 && $host == *.* && $host != *..* ]] || return 1
+ local IFS=.
+ read -ra labels <<< "$host"
+ for label in "${labels[@]}"; do
+  [[ ${#label} -le 63 && $label =~ ^[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?$ ]] || return 1
+ done
+ [[ $host != *. && ! $host =~ ^[0-9.]+$ ]]
+}
 valid_server() {
  local address host port
- [[ $1 =~ ^https?://[^/]+$ ]] || return 1
- address=${1#*://}; host=${address%:*}; port=${address##*:}
- [[ $host != "$address" && $port =~ ^[1-9][0-9]{0,4}$ ]] && ((10#$port <= 65535)) && valid_ipv4 "$host"
+ [[ $1 =~ ^https?://[A-Za-z0-9.:-]+$ ]] || return 1
+ address=${1#*://}; host=$address; port=
+ if [[ $address == *:* ]]; then
+  host=${address%:*}; port=${address##*:}
+  [[ $port =~ ^[1-9][0-9]{0,4}$ ]] && ((10#$port <= 65535)) || return 1
+ fi
+ if valid_ipv4 "$host"; then [[ -n $port ]]; else [[ $1 == https://* ]] && valid_hostname "$host"; fi
 }
 valid_token() { [[ $1 =~ ^[A-Za-z0-9+/=]{20,256}$ ]]; }
 config_value() {
@@ -162,8 +177,7 @@ if [[ -e \$config ]]; then
    *) fail 'invalid Outpost configuration' ;;
   esac
  done < "\$config"
- valid_ipv4() { local IFS=. a b c d extra octet; read -r a b c d extra <<< "\$1"; [[ -z \${extra:-} && -n \${a:-} && -n \${b:-} && -n \${c:-} && -n \${d:-} ]] || return 1; for octet in "\$a" "\$b" "\$c" "\$d"; do [[ \$octet =~ ^[0-9]{1,3}\$ ]] && ((10#\$octet <= 255)) || return 1; done; }
- valid_server() { local address host port; [[ \$1 =~ ^https?://[^/]+\$ ]] || return 1; address=\${1#*://}; host=\${address%:*}; port=\${address##*:}; [[ \$host != "\$address" && \$port =~ ^[1-9][0-9]{0,4}\$ ]] && ((10#\$port <= 65535)) && valid_ipv4 "\$host"; }
+$(declare -f valid_ipv4 valid_hostname valid_server)
  local_config=0
  if [[ \$count -eq 2 && -z \$jump ]]; then local_config=1; elif [[ \$count -eq 3 && \$jump =~ ^[A-Za-z_][A-Za-z0-9_-]{0,31}@[A-Za-z0-9][A-Za-z0-9.-]{0,251}\$ && \$jump != *..* ]]; then :; else fail 'invalid Outpost configuration'; fi
  [[ \$token =~ ^[A-Za-z0-9+/=]{20,256}\$ ]] && valid_server "\$server" || fail 'invalid Outpost configuration'
@@ -234,12 +248,103 @@ install_server_helper() {
  sudo chown root:root /etc/outpostd/uninstall.env
  sudo chmod 0600 /etc/outpostd/uninstall.env
 }
+prompt_value() {
+ local prompt=$1 variable=$2 input=${OUTPOST_INSTALL_INPUT:-/dev/tty}
+ [[ $input == /dev/tty || ${OUTPOST_INSTALL_TEST:-0} == 1 ]] || fail 'prompt input must be /dev/tty'
+ printf '%s' "$prompt" >&2
+ IFS= read -r "${variable?}" < "$input" || fail 'unable to read installer input'
+}
+select_network() {
+ local answer
+ network=${OUTPOST_INSTALL_NETWORK:-}
+ if [[ -z $network ]]; then
+  prompt_value 'Use Tailscale for private API and SSH connectivity? [Y/n]: ' answer
+  case $answer in
+   ''|y|Y|yes|YES) network=tailscale ;;
+   n|N|no|NO)
+    prompt_value 'Use Cloudflare Tunnel for HTTPS API access (SSH stays private)? [y/N]: ' answer
+    case $answer in
+     y|Y|yes|YES) network=cloudflare ;;
+     ''|n|N|no|NO) network=local ;;
+     *) fail 'answer yes or no' ;;
+    esac ;;
+   *) fail 'answer yes or no' ;;
+  esac
+ fi
+ case $network in tailscale|cloudflare|local) ;; *) fail 'invalid OUTPOST_INSTALL_NETWORK (tailscale, cloudflare, or local)' ;; esac
+ hostname=${OUTPOST_INSTALL_CLOUDFLARE_HOSTNAME:-}
+ if [[ $network == cloudflare ]]; then
+  if [[ -z $hostname ]]; then prompt_value 'Cloudflare API hostname (e.g. outpost.example.com): ' hostname; fi
+  valid_hostname "$hostname" || fail 'invalid Cloudflare hostname'
+ fi
+}
+install_cloudflare_tunnel() {
+ local work=$1 token token_file=${OUTPOST_INSTALL_CLOUDFLARE_TOKEN_FILE:-} binary attempt ready=0
+ binary=$(command -v cloudflared) || fail 'install cloudflared before choosing Cloudflare Tunnel'
+ [[ $binary =~ ^/[A-Za-z0-9._/-]+$ ]] || fail 'invalid cloudflared executable path'
+ printf 'Configure a Cloudflare dashboard tunnel with hostname %s and HTTP origin 127.0.0.1:17890.\n' "$hostname"
+ printf '%s\n' 'Only the API is exposed. The Outpost bearer token is still required; SSH/copy/sync need a separate private route.'
+ if [[ -n $token_file ]]; then
+  [[ -f $token_file && ! -L $token_file && $(stat -c %u "$token_file") == "$(id -u)" && $(stat -c %a "$token_file") =~ ^[0-7]00$ ]] || fail 'tunnel token file must be private and owned by the current user'
+  token=$(< "$token_file")
+ else
+  printf 'Paste the tunnel token (input hidden): ' >&2
+  IFS= read -rs token </dev/tty || fail 'unable to read tunnel token'
+  printf '\n' >&2
+ fi
+ [[ $token =~ ^[A-Za-z0-9_+/=-]{20,16384}$ ]] || fail 'invalid Cloudflare tunnel token'
+ # Keep credentials out of command arguments, logs, and the local client config.
+ (umask 077; printf 'TUNNEL_TOKEN=%s\n' "$token" > "$work/cloudflared.env")
+ unset token
+ cat > "$work/outpost-cloudflared.service" <<EOF
+[Unit]
+Description=Outpost Cloudflare API tunnel
+After=network-online.target outpostd.service
+Wants=network-online.target
+
+[Service]
+DynamicUser=yes
+EnvironmentFile=/etc/outpost-cloudflared/cloudflared.env
+ExecStart=$binary tunnel --no-autoupdate run
+Restart=on-failure
+RestartSec=5s
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+ if sudo test -e /etc/systemd/system/outpost-cloudflared.service; then
+  sudo cmp -s "$work/outpost-cloudflared.service" /etc/systemd/system/outpost-cloudflared.service || fail 'existing Outpost tunnel service has unexpected content; refusing to overwrite it'
+ fi
+ sudo install -d -o root -g root -m 0700 /etc/outpost-cloudflared
+ sudo install -o root -g root -m 0600 "$work/cloudflared.env" /etc/outpost-cloudflared/cloudflared.env
+ sudo install -o root -g root -m 0644 "$work/outpost-cloudflared.service" /etc/systemd/system/outpost-cloudflared.service
+ sudo systemctl daemon-reload
+ sudo systemctl enable outpost-cloudflared.service
+ sudo systemctl restart outpost-cloudflared.service
+ for ((attempt=0; attempt<60; attempt++)); do
+  if OUTPOST_SERVER="https://$hostname" "$HOME/.local/bin/outpost" list >/dev/null 2>&1; then ready=1; break; fi
+  sleep 1
+ done
+ [[ $ready == 1 ]] || fail 'Cloudflare API is not reachable; check the dashboard hostname/origin, DNS, and journalctl -u outpost-cloudflared'
+ printf 'Cloudflare API URL: https://%s\n' "$hostname"
+ printf '%s\n' 'Local CLI remains on localhost. Remove the dashboard tunnel/DNS record separately when uninstalling.'
+}
 server_install() (
  local work ip uplink actual handoff created_outpostd_user created_outpostvm_user created_outpostd_group created_outpostvm_group created_subuid created_subgid ip_previous changed_ip created_sysctl
  [[ $(uname -s) == Linux ]] || fail 'Linux is required'
  [[ $(uname -m) == x86_64 ]] || fail 'x86-64 is required'
  command -v sudo >/dev/null 2>&1 || fail 'sudo is required'
- command -v tailscale >/dev/null 2>&1 || fail 'Tailscale is required'
+ if [[ $network != cloudflare ]] && sudo test -f /etc/systemd/system/outpost-cloudflared.service; then
+  fail 'an Outpost Cloudflare tunnel is already installed; remove it before switching network modes'
+ fi
+ case $network in
+  tailscale) command -v tailscale >/dev/null 2>&1 || fail 'install and sign in to Tailscale first, or choose local/Cloudflare' ;;
+  cloudflare) command -v cloudflared >/dev/null 2>&1 || fail 'install cloudflared before choosing Cloudflare Tunnel' ;;
+ esac
  handoff=${OUTPOST_CLIENT_HANDOFF:-$HOME/.config/outpost/server.env}
  validate_handoff "$handoff"
  load_uninstall_marker || true
@@ -247,8 +352,11 @@ server_install() (
  work=$(mktemp -d "${TMPDIR:-/tmp}/outpost-server-install.XXXXXX")
  trap 'rm -rf "$work"' EXIT HUP INT TERM
  release_metadata "$work"
- ip=$(tailscale ip -4 | awk 'NR == 1 { print }')
- valid_ipv4 "$ip" || fail 'a Tailscale IPv4 address is required'
+ ip=127.0.0.1
+ if [[ $network == tailscale ]]; then
+  ip=$(tailscale ip -4 | awk 'NR == 1 { print }')
+  valid_ipv4 "$ip" || fail 'a Tailscale IPv4 address is required; sign in to Tailscale first'
+ fi
  uplink=$(ip route show default | awk 'NR == 1 { print $5 }')
  [[ $uplink =~ ^[A-Za-z0-9_.-]{1,15}$ ]] || fail 'a default network uplink is required'
  if [[ ${OUTPOST_INSTALL_TEST:-0} != 1 ]]; then
@@ -265,8 +373,8 @@ server_install() (
   ip_previous=$(sysctl -n net.ipv4.ip_forward); [[ $ip_previous =~ ^[01]$ ]] || fail 'invalid IPv4 forwarding state'
   changed_ip=0; [[ $ip_previous == 1 ]] || changed_ip=1; created_sysctl=1
  fi
- if [[ -e /etc/sysctl.d/99-outpost.conf || -L /etc/sysctl.d/99-outpost.conf ]]; then
-  [[ -f /etc/sysctl.d/99-outpost.conf && ! -L /etc/sysctl.d/99-outpost.conf && $(cat /etc/sysctl.d/99-outpost.conf) == net.ipv4.ip_forward=1 ]] || fail 'Outpost sysctl path contains unexpected content'
+ if [[ ${OUTPOST_INSTALL_TEST:-0} != 1 ]] && [[ -e /etc/sysctl.d/99-outpost.conf || -L /etc/sysctl.d/99-outpost.conf ]]; then
+  [[ -f /etc/sysctl.d/99-outpost.conf && ! -L /etc/sysctl.d/99-outpost.conf && $(sudo cat /etc/sysctl.d/99-outpost.conf) == net.ipv4.ip_forward=1 ]] || fail 'Outpost sysctl path contains unexpected content'
  else
   printf '%s\n' 'net.ipv4.ip_forward=1' | sudo tee /etc/sysctl.d/99-outpost.conf >/dev/null
  fi
@@ -275,19 +383,29 @@ server_install() (
  [[ $actual == "$installer_sha" ]] || fail 'server installer checksum mismatch'
  sudo env OUTPOST_VERSION="$version" OUTPOST_UPLINK="$uplink" OUTPOST_LISTEN="$ip:17890" OUTPOST_SERVER="http://$ip:17890" OUTPOST_CLIENT_HANDOFF="$handoff" OUTPOST_RELEASE_URL="$release" OUTPOST_ASSETS_MANIFEST_SHA256="$manifest_sha" sh "$work/install-server"
  install_server_helper
+ local attempt ready=0
+ for ((attempt=0; attempt<60; attempt++)); do
+  if "$HOME/.local/bin/outpost" list >/dev/null 2>&1; then ready=1; break; fi
+  sleep 1
+ done
+ [[ $ready == 1 ]] || fail 'Outpost API did not become ready within 60 seconds; check journalctl -u outpostd'
+ if [[ $network == cloudflare ]]; then install_cloudflare_tunnel "$work"; fi
 )
 main() {
- local mode=${OUTPOST_INSTALL_MODE:-} target=${OUTPOST_INSTALL_TARGET:-} work server token config_dir config_tmp
+ local mode=${OUTPOST_INSTALL_MODE:-} target=${OUTPOST_INSTALL_TARGET:-} work server token config_dir config_tmp network hostname
  case $mode in ''|client|server) ;; *) fail 'invalid OUTPOST_INSTALL_MODE' ;; esac
- if [[ $mode == server ]]; then client_install; server_install; return; fi
+ if [[ $mode == server ]]; then select_network; client_install; server_install; return; fi
  if [[ -z $target && $mode != client ]]; then
   [[ -r /dev/tty ]] || fail 'no terminal available; set OUTPOST_INSTALL_MODE=client, server, or OUTPOST_INSTALL_TARGET for automation'
   printf 'Outpost server (user@server, local, or blank for client only): ' >/dev/tty
   IFS= read -r target </dev/tty || fail 'unable to read server target'
  fi
- if [[ $target == local ]]; then client_install; server_install; return; fi
+ if [[ $target == local ]]; then select_network; client_install; server_install; return; fi
  if [[ -z $target ]]; then client_install; return; fi
  ssh_target "$target" || { usage; fail 'invalid SSH target'; }
+ select_network
+ [[ $network != local ]] || fail 'local-only networking requires installation on the server with target local'
+ # A remote token file path refers to the server, never upload credentials in the SSH command.
  work=$(mktemp -d "${TMPDIR:-/tmp}/outpost-release-metadata.XXXXXX")
  trap 'rm -rf "$work"' EXIT HUP INT TERM
  release_metadata "$work"
@@ -298,7 +416,7 @@ main() {
  handoff_work=$work
  trap 'rm -rf "$handoff_work"' EXIT HUP INT TERM
  local remote_script remote_command ssh_stdin
- printf -v remote_script 'set -o pipefail; curl --fail --location --proto %q --tlsv1.2 %q | OUTPOST_INSTALL_MODE=server OUTPOST_RELEASE_URL=%q OUTPOST_RELEASE_VERSION=%q OUTPOST_ASSETS_MANIFEST_SHA256=%q OUTPOST_INSTALL_SERVER_SHA256=%q bash' '=https' 'https://raw.githubusercontent.com/nishantdania/outpost/refs/heads/main/install.sh' "$release" "$version" "$manifest_sha" "$installer_sha"
+ printf -v remote_script 'set -o pipefail; curl --fail --location --proto %q --tlsv1.2 %q | OUTPOST_INSTALL_MODE=server OUTPOST_RELEASE_URL=%q OUTPOST_RELEASE_VERSION=%q OUTPOST_ASSETS_MANIFEST_SHA256=%q OUTPOST_INSTALL_SERVER_SHA256=%q OUTPOST_INSTALL_NETWORK=%q OUTPOST_INSTALL_CLOUDFLARE_HOSTNAME=%q OUTPOST_INSTALL_CLOUDFLARE_TOKEN_FILE=%q bash' '=https' 'https://raw.githubusercontent.com/nishantdania/outpost/refs/heads/main/install.sh' "$release" "$version" "$manifest_sha" "$installer_sha" "$network" "$hostname" "${OUTPOST_INSTALL_CLOUDFLARE_TOKEN_FILE:-}"
  printf -v remote_command 'bash -c %q' "$remote_script"
  ssh_stdin=${OUTPOST_INSTALL_SSH_STDIN:-/dev/tty}
  [[ $ssh_stdin == /dev/tty || ${OUTPOST_INSTALL_TEST:-0} == 1 ]] || fail 'SSH input must be /dev/tty'
@@ -306,6 +424,7 @@ main() {
  scp "$target:~/.config/outpost/server.env" "$work/server.env"
  valid_config "$work/server.env" || fail 'server returned invalid configuration'
  server=$(config_value OUTPOST_SERVER "$work/server.env")
+ if [[ $network == cloudflare ]]; then server=https://$hostname; fi
  token=$(config_value OUTPOST_TOKEN "$work/server.env")
  config_dir=${OUTPOST_CONFIG_DIR:-$HOME/.config/outpost}
  [[ $config_dir == /* ]] || fail 'OUTPOST_CONFIG_DIR must be absolute'
