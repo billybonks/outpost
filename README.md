@@ -32,7 +32,13 @@ curl -fsSL https://raw.githubusercontent.com/nishantdania/outpost/refs/heads/mai
 
 The installer asks for `local`, `user@server`, or nothing for CLI-only installation.
 The client is installed in `~/.local/bin`; a server installation also installs the
-CLI in `/usr/local/bin` and enables only `outpost-vm-launcher.service`. On Arch,
+CLI in `/usr/local/bin` and enables only `outpost-vm-launcher.service`.
+The default guest disk is distributed as a complete compressed filesystem image;
+the installer downloads, verifies and decompresses it. Installing Outpost and
+running the default image require **neither Docker nor Podman**. Container tools
+are only needed if you choose an image-building recipe that uses them.
+
+On Arch,
 install dependencies during your normal system upgrade; the installer never runs
 an Arch upgrade. Ubuntu/Debian dependencies are installed with apt.
 
@@ -589,7 +595,16 @@ Outpost never runs it. The launcher also does not set the guest hostname to the 
 name.
 
 For the separate pinned, release-time minimal-disk recipe, see
-`images/default/build.sh`.
+`images/default/build.sh`. This is a maintainer/development workflow, not an
+installation step: normal installations use the already-built default disk.
+To rebuild it with rootless Podman on a development machine:
+
+```bash
+OUTPOST_VERSION=0.0.0 OCI_ENGINE=podman \
+  SOURCE_DATE_EPOCH=$(git log -1 --format=%ct) images/default/build.sh
+```
+
+Docker is the builder's default engine; omit `OCI_ENGINE=podman` to use it.
 
 **Imported images retain application data, credentials, and machine identity.**
 Prepare them for reuse yourself; Outpost does not sanitize them. Snapshots of an

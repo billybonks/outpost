@@ -15,7 +15,19 @@ container=
 cleanup() { [ -z "$container" ] || "$engine" rm -f "$container" >/dev/null 2>&1 || true; [ ! -d "$tmp/root" ] || "$engine" run --rm -v "$tmp/root:/out" "$tag" sh -c 'rm -rf /out/* /out/.[!.]* /out/..?*' >/dev/null 2>&1 || true; rm -rf "$tmp"; }
 trap cleanup EXIT INT TERM
 if [ "${OUTPOST_NO_CACHE:-0}" = 1 ]; then cache=--no-cache; else cache=; fi
-"$engine" build $cache --provenance=false --platform="linux/$arch" --build-arg SOURCE_DATE_EPOCH="$epoch" -t "$tag" "$root/images/default"
+# Rootless Podman maps container root to the invoking host user. Chowning
+# to the host's numeric UID inside that namespace would create an unreadable
+# output owned by a subordinate UID instead.
+owner="$(id -u):$(id -g)"
+# Podman does not accept Docker BuildKit's provenance flag.
+case "${engine##*/}" in
+ podman|podman-remote)
+  set --
+  if [ "$("$engine" info --format '{{.Host.Security.Rootless}}')" = true ]; then owner=0:0; fi
+  ;;
+ *) set -- --provenance=false ;;
+esac
+"$engine" build $cache "$@" --platform="linux/$arch" --build-arg SOURCE_DATE_EPOCH="$epoch" -t "$tag" "$root/images/default"
 container=$("$engine" create "$tag")
 "$engine" export "$container" > "$tmp/export.tar"
 python3 - "$tmp/export.tar" "$tmp/layer.tar" "$epoch" <<'PY'
@@ -45,7 +57,7 @@ debugfs -w -f /work/debugfs.commands "/work/$IMAGE" >/dev/null 2>&1
 chown "$OWNER" "/work/$IMAGE"
 SH
 chmod 0755 "$tmp/make-ext4"
-"$engine" run --rm -e EPOCH="$epoch" -e SIZE="${OUTPOST_ROOTFS_SIZE:-4G}" -e IMAGE="$image" -e OWNER="$(id -u):$(id -g)" -v "$tmp:/work" "$tag" /work/make-ext4
+"$engine" run --rm -e EPOCH="$epoch" -e SIZE="${OUTPOST_ROOTFS_SIZE:-4G}" -e IMAGE="$image" -e OWNER="$owner" -v "$tmp:/work" "$tag" /work/make-ext4
 python3 - "$tmp/$image" "$epoch" <<'PY'
 import struct,sys
 path,epoch=sys.argv[1:]
