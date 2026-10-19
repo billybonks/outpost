@@ -1,4 +1,5 @@
 #!/bin/sh
+# Release-time disk recipe. No container engine or OCI archive is installed on servers.
 set -eu
 root=$(CDPATH='' cd -- "$(dirname -- "$0")/../.." && pwd)
 version=${OUTPOST_VERSION:?OUTPOST_VERSION is required}
@@ -17,34 +18,14 @@ if [ "${OUTPOST_NO_CACHE:-0}" = 1 ]; then cache=--no-cache; else cache=; fi
 "$engine" build $cache --provenance=false --platform="linux/$arch" --build-arg SOURCE_DATE_EPOCH="$epoch" -t "$tag" "$root/images/default"
 container=$("$engine" create "$tag")
 "$engine" export "$container" > "$tmp/export.tar"
-python3 - "$tmp/export.tar" "$tmp/layer.tar" "$out/outpost-default-$version-$arch.oci.tar" "$version" "$epoch" <<'PY'
-import hashlib,json,os,sys,tarfile,tempfile,shutil
-source,layer,archive,version,epoch=sys.argv[1:]; epoch=int(epoch)
+python3 - "$tmp/export.tar" "$tmp/layer.tar" "$epoch" <<'PY'
+import sys,tarfile
+source,layer,epoch=sys.argv[1:]; epoch=int(epoch)
 with tarfile.open(source) as src, tarfile.open(layer,'w',format=tarfile.PAX_FORMAT) as dst:
- members=sorted(src.getmembers(),key=lambda x:x.name)
- for m in members:
+ for m in sorted(src.getmembers(),key=lambda x:x.name):
   if m.name in ('.dockerenv','run/.containerenv','etc/hostname','etc/hosts','etc/resolv.conf'): continue
   m.mtime=epoch; m.uname=m.gname=''; m.pax_headers={}
-  data=src.extractfile(m) if m.isfile() else None
-  dst.addfile(m,data)
-def digest(data): return hashlib.sha256(data).hexdigest()
-layer_data=open(layer,'rb').read(); layer_hash=digest(layer_data)
-created='1970-01-01T00:00:00Z'
-config=json.dumps({'architecture':'amd64','config':{},'created':created,'history':[{'created':created,'created_by':'outpost default image'}],'os':'linux','rootfs':{'diff_ids':['sha256:'+layer_hash],'type':'layers'}},sort_keys=True,separators=(',',':')).encode(); config_hash=digest(config)
-manifest=json.dumps({'config':{'digest':'sha256:'+config_hash,'mediaType':'application/vnd.oci.image.config.v1+json','size':len(config)},'layers':[{'digest':'sha256:'+layer_hash,'mediaType':'application/vnd.oci.image.layer.v1.tar','size':len(layer_data)}],'mediaType':'application/vnd.oci.image.manifest.v1+json','schemaVersion':2},sort_keys=True,separators=(',',':')).encode(); manifest_hash=digest(manifest)
-index=json.dumps({'manifests':[{'annotations':{'org.opencontainers.image.ref.name':'outpost/default:'+version+'-amd64'},'digest':'sha256:'+manifest_hash,'mediaType':'application/vnd.oci.image.manifest.v1+json','size':len(manifest)}],'schemaVersion':2},sort_keys=True,separators=(',',':')).encode()
-layout=b'{"imageLayoutVersion":"1.0.0"}'
-d=tempfile.mkdtemp()
-try:
- os.makedirs(d+'/blobs/sha256')
- for name,data in [(layer_hash,layer_data),(config_hash,config),(manifest_hash,manifest)]: open(d+'/blobs/sha256/'+name,'wb').write(data)
- open(d+'/index.json','wb').write(index); open(d+'/oci-layout','wb').write(layout)
- with tarfile.open(archive,'w',format=tarfile.PAX_FORMAT) as out:
-  for base,dirs,files in os.walk(d):
-   dirs.sort(); files.sort()
-   for name in dirs+files:
-    p=os.path.join(base,name); info=out.gettarinfo(p,os.path.relpath(p,d)); info.uid=info.gid=0; info.uname=info.gname=''; info.mtime=epoch; info.pax_headers={}; out.addfile(info,open(p,'rb') if info.isfile() else None)
-finally: shutil.rmtree(d)
+  dst.addfile(m,src.extractfile(m) if m.isfile() else None)
 PY
 mkdir "$tmp/root"
 "$engine" run --rm -i -v "$tmp/root:/out" "$tag" tar -C /out -xf - < "$tmp/layer.tar"
@@ -72,4 +53,4 @@ with open(path,'r+b') as f:
  for offset in (1024+48,1024+64,1024+264): f.seek(offset); f.write(struct.pack('<I',int(epoch)))
 PY
 mv "$tmp/$image" "$out/$image"
-( cd "$out" && sha256sum "outpost-default-$version-$arch.oci.tar" "$image" > checksums.txt )
+( cd "$out" && sha256sum "$image" > checksums.txt )
