@@ -42,9 +42,21 @@ On Arch,
 install dependencies during your normal system upgrade; the installer never runs
 an Arch upgrade. Ubuntu/Debian dependencies are installed with apt.
 
-Run `sudo outpost list` **on the VM host**. To allow a trusted local administrator
-without sudo, add them explicitly to the `outpost` group and start a new login
-session. The socket is `root:outpost`, mode `0660`, under a protected directory.
+Run `sudo outpost list` **on the VM host**. During interactive server setup,
+the installer offers to grant the installing user privileged management access
+without sudo. This is opt-in and adds the selected account to the `outpost` group
+during the same installation. Start a new login session or run `newgrp outpost`
+to activate membership in your shell.
+
+For noninteractive setup, explicitly set `OUTPOST_ADMIN_USER` to an existing
+account on the VM host (also supported by `scripts/install-server`):
+
+```bash
+OUTPOST_ADMIN_USER=alice bash install.sh local
+```
+
+Leave it unset or empty to keep sudo-only access; no user is automatically added.
+The socket is `root:outpost`, mode `0660`, under a protected directory.
 **Socket-group membership grants privileged VM-host management access.** It does
 not grant direct access to the root-private database or disks.
 

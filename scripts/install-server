@@ -16,6 +16,15 @@ for path in /var/lib/outpost /var/lib/outpost/images /var/lib/outpost/images/def
  [ ! -L "$root$path" ] || { echo "refusing symlink: $path" >&2; exit 1; }
 done
 printf '%s\n' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || exit 1
+admin_user=${OUTPOST_ADMIN_USER:-}
+if [ -n "$admin_user" ]; then
+ case "$admin_user" in [!A-Za-z_]*|*[!A-Za-z0-9_-]*) echo 'invalid administrator username' >&2; exit 1;; esac
+ [ "${#admin_user}" -le 32 ] || { echo 'invalid administrator username' >&2; exit 1; }
+ if [ "$test_mode" != 1 ]; then
+  id "$admin_user" >/dev/null 2>&1 || { echo "administrator account does not exist: $admin_user" >&2; exit 1; }
+  command -v usermod >/dev/null 2>&1 || { echo 'missing usermod' >&2; exit 1; }
+ fi
+fi
 if [ "$test_mode" != 1 ]; then
  [ "$(id -u)" = 0 ] || { echo 'must run as root' >&2; exit 1; }
  [ "$(uname -s):$(uname -m)" = Linux:x86_64 ] || { echo 'Linux x86-64 is required' >&2; exit 1; }
@@ -188,4 +197,8 @@ while time.monotonic()<end:
 else: raise SystemExit('launcher is not ready; inspect journalctl -u outpost-vm-launcher.service')
 PY
 fi
-printf 'Installed one launcher. Use sudo outpost, or explicitly grant trusted users membership in the outpost group.\n'
+if [ -n "$admin_user" ] && [ "$test_mode" != 1 ]; then
+ usermod -aG outpost "$admin_user"
+ printf 'Granted %s privileged Outpost management access. Start a new login session or run newgrp outpost to activate it.\n' "$admin_user"
+fi
+printf 'Installed one launcher. Use sudo outpost, or a trusted member of the outpost group.\n'
