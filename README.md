@@ -24,6 +24,13 @@ Start with [an SSH workstation](#start-an-ssh-workstation), the
 - Root/sudo for installation and launcher operation
 - Local socket access for the CLI; SSH is optional external transport for remote administration
 
+The guest kernel is supplied separately from disk images: Firecracker boots
+`/usr/local/lib/outpost/launcher/vmlinux` and mounts the selected disk as root.
+An imported disk's own kernel/bootloader is not used. Releases build the kernel
+from pinned Linux source and a Firecracker configuration; see the
+[kernel build and validation guide](kernel/README.md). Building is a release-time
+workflow, not a VM-host installation requirement.
+
 ## Install
 
 ```bash
@@ -483,10 +490,12 @@ This is an external image-producer recipe for an x86-64 Linux build machine with
 Podman, Skopeo, umoci and e2fsprogs. Run it in a fresh build directory. Container
 and filesystem tools are not Outpost runtime dependencies.
 
-**Validation status:** the configuration below is a documented recipe, not a
-claim of a verified Firecracker boot. The refactor has passed simulated lifecycle
-and byte-preservation checks, but this SSH image still needs a real boot/network/
-SSH check against the released kernel and host setup.
+**Validation status:** this configuration has been built and booted on a real
+Firecracker host with the pinned kernel. Guest networking, verified-key SSH,
+scp/rsync, stop/start persistence, stopped-disk snapshots and independent clones
+were exercised successfully. Image export/population used Skopeo, umoci and
+e2fsprogs inside a rootless producer container rather than host sudo. This is a
+validation of that setup, not a guarantee for every host or future package input.
 
 #### 1. Supply your public key and guest configuration
 
@@ -600,11 +609,23 @@ The guest generates missing host keys itself and retains them on later boots.
 Check its logged fingerprint through the trusted host's boot log when establishing
 SSH trust. No private login key needs to be installed on the VM host for ProxyJump.
 
-The guest includes `e2fsprogs` for optional filesystem administration. If you later
-create a VM with a larger disk file, growing this recipe's ext4 root filesystem is
-a separate operation you can perform inside the guest (`sudo resize2fs /dev/vda`).
-Outpost never runs it. The launcher also does not set the guest hostname to the VM
-name.
+The guest includes `e2fsprogs` for optional filesystem administration. If you
+create a VM with a larger disk, explicitly grow this recipe's ext4 filesystem
+inside the guest:
+
+```bash
+sudo resize2fs /dev/vda
+df -h /
+```
+
+The kernel built by the current release recipe enables
+`CONFIG_BLK_DEV_WRITE_MOUNTED`; online growth from 8 to 12 GiB and then to 16 GiB
+in a snapshot clone has been tested on a real host. The older prebuilt kernel
+blocks this operation with `Device or resource busy`. Upgrade the host's Outpost
+kernel and stop/start the guest before retrying, or prepare a larger filesystem
+offline before import. See the [kernel guide](kernel/README.md) for the build and
+security trade-off. Outpost never resizes guest filesystems automatically. The
+launcher also does not set the guest hostname to the VM name.
 
 For the separate pinned, release-time minimal-disk recipe, see
 `images/default/build.sh`. This is a maintainer/development workflow, not an
