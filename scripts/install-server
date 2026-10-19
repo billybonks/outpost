@@ -10,7 +10,10 @@ case "$root" in /|*/../*|*/..|*/./*|*/.) echo 'unsafe test root' >&2; exit 1;; '
 # Reject the retired layout before installing packages, changing ownership, or
 # replacing binaries. Never silently mix incompatible schema/runtime lineages.
 for legacy in /var/lib/outpostd /etc/systemd/system/outpostd.service; do
- [ ! -e "$root$legacy" ] && [ ! -L "$root$legacy" ] || { echo "retired installation found at $legacy; preserve/export its disks before explicitly removing it" >&2; exit 1; }
+ if [ -e "$root$legacy" ] || [ -L "$root$legacy" ]; then
+  echo "retired installation found at $legacy; preserve/export its disks before explicitly removing it" >&2
+  exit 1
+ fi
 done
 for path in /var/lib/outpost /var/lib/outpost/images /var/lib/outpost/images/default /srv /srv/outpost /srv/outpost/state /srv/outpost/jailer /etc/outpost /usr/local/lib/outpost /usr/local/lib/outpost/launcher; do
  [ ! -L "$root$path" ] || { echo "refusing symlink: $path" >&2; exit 1; }
@@ -35,7 +38,10 @@ if [ "$test_mode" != 1 ]; then
  for command in curl zstd ip nft python3 sha256sum install groupadd useradd getent systemctl; do
   command -v "$command" >/dev/null 2>&1 || { echo "missing $command; install dependencies through your normal system upgrade" >&2; exit 1; }
  done
- [ -c /dev/kvm ] && [ -c /dev/net/tun ] && [ -c /dev/userfaultfd ] && [ -f /sys/fs/cgroup/cgroup.controllers ] || { echo 'KVM, TUN, userfaultfd and cgroup v2 are required' >&2; exit 1; }
+ if [ ! -c /dev/kvm ] || [ ! -c /dev/net/tun ] || [ ! -c /dev/userfaultfd ] || [ ! -f /sys/fs/cgroup/cgroup.controllers ]; then
+  echo 'KVM, TUN, userfaultfd and cgroup v2 are required' >&2
+  exit 1
+ fi
  [ "$(cat /proc/sys/net/ipv4/ip_forward)" = 1 ] || { echo 'enable IPv4 forwarding before installation' >&2; exit 1; }
 fi
 uplink=${OUTPOST_UPLINK:-$(ip -4 route show default | awk 'NR == 1 {print $5}')}

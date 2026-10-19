@@ -21,7 +21,9 @@ if [ "$test_mode" != 1 ]; then
 fi
 # An old deployment needs its own uninstaller; never mix the two data layouts.
 for path in /var/lib/outpostd /etc/systemd/system/outpostd.service; do
- [ ! -e "$root$path" ] && [ ! -L "$root$path" ] || fail "retired installation found at $path; use its matching uninstaller"
+ if [ -e "$root$path" ] || [ -L "$root$path" ]; then
+  fail "retired installation found at $path; use its matching uninstaller"
+ fi
 done
 for path in /etc/outpost /var/lib/outpost /srv /srv/outpost /srv/outpost/state /srv/outpost/jailer /run/outpost /usr/local/lib/outpost; do
  [ ! -L "$root$path" ] || fail "refusing symlink: $path"
