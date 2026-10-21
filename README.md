@@ -543,7 +543,7 @@ Save `Dockerfile`:
 FROM ubuntu:24.04
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-      systemd-sysv udev openssh-server sudo iproute2 ca-certificates e2fsprogs \
+      systemd-sysv udev openssh-server rsync sudo iproute2 ca-certificates e2fsprogs \
  && rm -rf /var/lib/apt/lists/*
 RUN useradd --create-home --user-group --shell /bin/bash dev \
  && usermod --password '*' dev \
